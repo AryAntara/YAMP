@@ -1,0 +1,2 @@
+import './blessed/index.js';
+
