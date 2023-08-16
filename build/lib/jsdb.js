@@ -6,7 +6,7 @@ export class JSDB {
     constructor(filepath) {
         this.filepath = filepath;
         this.data = [];
-        if (fs.existsSync(filepath)) {
+        if (!fs.existsSync(filepath)) {
             fs.writeFileSync(filepath, '[]');
         }
     }

@@ -23,15 +23,18 @@ async function createMediaList() {
     });
     // get 10 media 
     const query = 'nadin amizah'; // search query
-    const media = await getYtMediaByName(query);
+    let media = await getYtMediaByName(query);
+    let mediaListMap = [];
     // mapping media results 
-    const mediaListMap = media.map((e, i) => {
+    mediaListMap = media.map((e, i) => {
         if (db.read().find((item) => item.id == e.id)) {
-            return `${i + 1}. (${green(icon('check'))}) ${e.title} - ${(new Date(e.publishedAt)).getFullYear()}`;
+            return `${i + 1}. (${green(icon('check'))}) ${e.title} - ${e.publish_at}`;
         }
-        return `${i + 1}. ${e.title} - ${(new Date(e.publishedAt)).getFullYear()}`;
+        return `${i + 1}. ${e.title} - ${e.publish_at}`;
     });
+    console.log(mediaListMap);
     boxMediaList.setItems(mediaListMap);
+    // EVENTS
     // change item list in box media
     boxMediaListEvent.on('change-items', (items) => {
         boxMediaList.setItems(items);
@@ -45,11 +48,11 @@ async function createMediaList() {
     boxMediaListEvent.on('re-render', function () {
         const media = getAll();
         // mapping media results 
-        const mediaListMap = media.map((e, i) => {
+        mediaListMap = media.map((e, i) => {
             if (db.read().find((item) => item.id == e.id)) {
-                return `${i + 1}. (${green(icon('check'))}) ${e.title} - ${(new Date(e.publishedAt)).getFullYear()}`;
+                return `${i + 1}. (${green(icon('check'))}) ${e.title} - ${e.publish_at}`;
             }
-            return `${i + 1}. ${e.title} - ${(new Date(e.publishedAt)).getFullYear()}`;
+            return `${i + 1}. ${e.title} - ${e.publish_at}`;
         });
         boxMediaList.setItems(mediaListMap);
         boxMediaList.setItems(mediaListMap);

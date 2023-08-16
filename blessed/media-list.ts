@@ -6,6 +6,8 @@ import { MediaInfo, db } from "../lib/yt/yt-download.js";
 import { green } from "kolorist";
 import { icon } from "../lib/icons.js";
 import { getAll } from "../lib/contents.js";
+import { isOffline } from "../lib/system.js";
+import { YouTubeSearchResults } from "youtube-search";
 
 async function createMediaList() {
 
@@ -28,16 +30,21 @@ async function createMediaList() {
 
     // get 10 media 
     const query = 'nadin amizah' // search query
-    const media = await getYtMediaByName(query)
+
+    let media = await getYtMediaByName(query)
+    let mediaListMap: Array<string> = [];
 
     // mapping media results 
-    const mediaListMap = media.map((e, i) => {
+    mediaListMap = media.map((e, i) => {
         if (db.read().find((item: MediaInfo) => item.id == e.id)) {
-            return `${i + 1}. (${green(icon('check'))}) ${e.title} - ${(new Date(e.publishedAt)).getFullYear()}`
+            return `${i + 1}. (${green(icon('check'))}) ${e.title} - ${e.publish_at}`
         }
-        return `${i + 1}. ${e.title} - ${(new Date(e.publishedAt)).getFullYear()}`
+        return `${i + 1}. ${e.title} - ${e.publish_at}`
     })
+    console.log(mediaListMap);
     boxMediaList.setItems(mediaListMap);
+
+    // EVENTS
 
     // change item list in box media
     boxMediaListEvent.on('change-items', (items) => {
@@ -54,11 +61,11 @@ async function createMediaList() {
     boxMediaListEvent.on('re-render', function () {
         const media = getAll();
         // mapping media results 
-        const mediaListMap = media.map((e, i) => {
+        mediaListMap = media.map((e, i) => {
             if (db.read().find((item: MediaInfo) => item.id == e.id)) {
-                return `${i + 1}. (${green(icon('check'))}) ${e.title} - ${(new Date(e.publishedAt)).getFullYear()}`
+                return `${i + 1}. (${green(icon('check'))}) ${e.title} - ${e.publish_at}`
             }
-            return `${i + 1}. ${e.title} - ${(new Date(e.publishedAt)).getFullYear()}`
+            return `${i + 1}. ${e.title} - ${e.publish_at}`
         })
         boxMediaList.setItems(mediaListMap);
         boxMediaList.setItems(mediaListMap)

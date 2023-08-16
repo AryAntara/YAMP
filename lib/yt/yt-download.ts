@@ -15,7 +15,7 @@ const MS_IN_SEC = 1000;
 export const db = new JSDB(DB_PATH);
 export type MediaInfo = {
     id: string,
-    filename: string,
+    filename?: string,
     publish_at: string,
     title: string,
     duration?: number,
@@ -23,7 +23,7 @@ export type MediaInfo = {
 
 type MediaSpec = { filename: string, duration?: number };
 
-export async function downloadMedia(media: YouTubeSearchResults): Promise<MediaSpec> {
+export async function downloadMedia(media: MediaInfo): Promise<MediaSpec> {
     const filename = `${media.id} - ${media.title}.mp3`
     const filesDownloaded = db.read() as MediaInfo[];
 
@@ -43,7 +43,7 @@ export async function downloadMedia(media: YouTubeSearchResults): Promise<MediaS
     const mediaInfo: MediaInfo = {
         id: media.id,
         filename: filename,
-        publish_at: media.publishedAt,
+        publish_at: media.publish_at,
         title: media.title,
         duration: duration + 3
     }

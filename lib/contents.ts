@@ -1,18 +1,18 @@
-import { YouTubeSearchResults } from "youtube-search";
+import { MediaInfo } from "./yt/yt-download";
 
 // localvariable
-let contents: YouTubeSearchResults[] = [];
+let contents: MediaInfo[] = [];
 
 // set contents 
-export function setItems(items: YouTubeSearchResults[]){
+export function setItems(items: MediaInfo[]){
     contents = items; 
 }
 
 // get content by Index 
-export function getItem(index: number): YouTubeSearchResults | null {
+export function getItem(index: number): MediaInfo | null {
     return contents[index];
 }
 
-export function getAll(): YouTubeSearchResults[] {
+export function getAll(): MediaInfo[] {
     return contents;
 }

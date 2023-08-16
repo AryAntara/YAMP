@@ -35,15 +35,16 @@ function createSearchInput() {
     return searchInput;
 }
 async function searchVideos(value) {
-    const results = await getYtMediaByName(value);
-    const items = results.map((e, i) => {
+    let media = await getYtMediaByName(value);
+    let mediaListMap = [];
+    mediaListMap = media.map((e, i) => {
         if (db.read().find((item) => item.id == e.id)) {
-            return `${i + 1}. (${green(icon('check'))}) ${e.title} - ${(new Date(e.publishedAt)).getFullYear()}`;
+            return `${i + 1}. (${green(icon('check'))}) ${e.title} - ${e.publish_at}`;
         }
-        return `${i + 1}. ${e.title} - ${(new Date(e.publishedAt)).getFullYear()}`;
+        return `${i + 1}. ${e.title} - ${e.publish_at}`;
     });
     // change list item
-    boxMediaListEvent.emit('change-items', items);
+    boxMediaListEvent.emit('change-items', mediaListMap);
 }
 function createSearchBox() {
     // initlize input 

@@ -24,4 +24,4 @@ screen.key(['escape', 'q', 'C-c'], () => {
     process.exit(0);
 });
 // Render the screen.
-screen.render();
+//screen.render();

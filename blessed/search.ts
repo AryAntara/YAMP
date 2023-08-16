@@ -5,6 +5,8 @@ import { screen } from "./index.js";
 import { icon } from "../lib/icons.js";
 import { MediaInfo, db } from "../lib/yt/yt-download.js";
 import { green } from "kolorist";
+import { isOffline } from "../lib/system.js";
+import { YouTubeSearchResults } from "youtube-search";
 function createSearchInput() {
     const searchInput = blessed.textbox({
         bottom: '0',
@@ -40,17 +42,18 @@ function createSearchInput() {
 }
 
 async function searchVideos(value: string) {
-    const results = await getYtMediaByName(value);
-    const items = results.map((e, i) => {
-        
-        if(db.read().find( (item: MediaInfo ) => item.id == e.id )){
-            return `${i + 1}. (${green(icon('check'))}) ${e.title} - ${(new Date(e.publishedAt)).getFullYear()}` 
+    let media = await getYtMediaByName(value)
+    let mediaListMap: Array<string> = [];
+
+    mediaListMap = media.map((e, i) => {
+        if (db.read().find((item: MediaInfo) => item.id == e.id)) {
+            return `${i + 1}. (${green(icon('check'))}) ${e.title} - ${e.publish_at}`
         }
-        return `${i + 1}. ${e.title} - ${(new Date(e.publishedAt)).getFullYear()}`
+        return `${i + 1}. ${e.title} - ${e.publish_at}`
     })
 
     // change list item
-    boxMediaListEvent.emit('change-items', items)
+    boxMediaListEvent.emit('change-items', mediaListMap)
 }
 
 function createSearchBox() {

@@ -26,7 +26,7 @@ export async function downloadMedia(media) {
     const mediaInfo = {
         id: media.id,
         filename: filename,
-        publish_at: media.publishedAt,
+        publish_at: media.publish_at,
         title: media.title,
         duration: duration + 3
     };

@@ -1,33 +1,28 @@
-import fs from 'fs';
-import crypto from 'crypto';
-import search, { YouTubeSearchOptions, YouTubeSearchResults } from "youtube-search";
+import { YouTubeSearchResults } from "youtube-search";
 import { setItems } from '../contents.js';
-
-const MAX_RESULTS = 30; 
-const API_KEY = 'AIzaSyD-yq_b0lBHV2GkBczqinFV63A2gwzg1Fc';// jangan pakai bang :(
+import { MediaInfo, db } from './yt-download.js';
+import { goOffline } from '../system.js';
+import { search } from "../youtube.js";
 
 /**
  * Get Youtube videos by name
  * 
- * @param {string} query - The search query
+ * @param query - The search query
  * @return {YouTubeSearchResults} - A list of result
  */
-export async function getYtMediaByName(query: string): Promise<YouTubeSearchResults[]> {
+export async function getYtMediaByName(query: string): Promise<MediaInfo[]> {
     try {
-        const opts: YouTubeSearchOptions = {
-            key: API_KEY,
-            maxResults: MAX_RESULTS,
-            type: 'video'
-        }
-        const searching = await search(query, opts);
-        const results = searching?.results || [];
-        
+        const searching = await search(query);
+        const results = searching || [];
+
         // set content into global
-        setItems(results)
+        setItems(searching);
 
         return results;
     } catch (error) {
         console.log('Error when fetching data', error)
-        return [];
+        goOffline()
+        const offlineMedia = db.read();
+        return offlineMedia as MediaInfo[];
     }
 }
