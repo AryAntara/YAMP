@@ -2,7 +2,7 @@ import blessed from 'blessed';
 import createMediaList from './media-list.js';
 import createSearchBox  from './search.js';
 import createNotificationBox from './notifcation.js';
-import { exec } from 'child_process';
+import createMediaDetail from './media-detail.js';
 import { killPlayer } from '../lib/yt/yt-play.js';
 
 // Create a screen object.
@@ -11,15 +11,19 @@ export const screen = blessed.screen({
     title: 'A_YAM'
 });
 
+console.log('loading...')
+
 // Initilize other components
 const boxMediaList = await createMediaList();
 const searchBox = createSearchBox();
 const notificationBox = createNotificationBox();
+const boxMediaDetail = createMediaDetail();
 
 // Append other components to the screen.
 screen.append(boxMediaList);
 screen.append(searchBox);
 screen.append(notificationBox);
+screen.append(boxMediaDetail);
 
 // focus on media list
 boxMediaList.focus();
@@ -31,4 +35,4 @@ screen.key(['escape', 'q', 'C-c'], () => {
 });
 
 // Render the screen.
-//screen.render();
+screen.render();

@@ -1,6 +1,4 @@
 import { setItems } from '../contents.js';
-import { db } from './yt-download.js';
-import { goOffline } from '../system.js';
 import { search } from "../youtube.js";
 /**
  * Get Youtube videos by name
@@ -11,15 +9,11 @@ import { search } from "../youtube.js";
 export async function getYtMediaByName(query) {
     try {
         const searching = await search(query);
-        const results = searching || [];
         // set content into global
         setItems(searching);
-        return results;
+        return searching;
     }
     catch (error) {
-        console.log('Error when fetching data', error);
-        goOffline();
-        const offlineMedia = db.read();
-        return offlineMedia;
+        return [];
     }
 }

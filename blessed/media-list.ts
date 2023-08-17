@@ -6,8 +6,6 @@ import { MediaInfo, db } from "../lib/yt/yt-download.js";
 import { green } from "kolorist";
 import { icon } from "../lib/icons.js";
 import { getAll } from "../lib/contents.js";
-import { isOffline } from "../lib/system.js";
-import { YouTubeSearchResults } from "youtube-search";
 
 async function createMediaList() {
 
@@ -17,6 +15,7 @@ async function createMediaList() {
                 type: 'line'
             },
             height: "95%",
+            width: '50%',
             mouse: true,
             keys: true,
             style: {
@@ -29,9 +28,9 @@ async function createMediaList() {
     )
 
     // get 10 media 
-    const query = 'nadin amizah' // search query
+    const query = 'serana' // search query
 
-    let media = await getYtMediaByName(query)
+    let media = await getYtMediaByName(query)    
     let mediaListMap: Array<string> = [];
 
     // mapping media results 
@@ -41,7 +40,7 @@ async function createMediaList() {
         }
         return `${i + 1}. ${e.title} - ${e.publish_at}`
     })
-    console.log(mediaListMap);
+
     boxMediaList.setItems(mediaListMap);
 
     // EVENTS

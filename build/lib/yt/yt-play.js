@@ -1,35 +1,23 @@
 import { exec } from "child_process";
 import { getItem } from "../contents.js";
 import { db, downloadMedia } from "./yt-download.js";
-import { boxMediaListEvent, notification } from "../../events.js";
+import { boxMediaDetailEvent, boxMediaListEvent, notification } from "../../events.js";
 import { icon } from "../icons.js";
 import { green } from "kolorist";
-import { isOffline } from "../system.js";
 let play;
 export async function playMedia(item) {
-    const offlineMode = isOffline();
     const title = item.content;
     const index = Number(title.split('.')[0]) - 1;
-    // if you are in offline mode
-    if (offlineMode) {
-        // try using downloaded song 
-        const downloadedSongs = db.read();
-        const song = downloadedSongs[index];
-        if (!song) {
-            return;
-        }
-        player(song.title, song.filename ?? '', song.duration);
-        return;
-    }
-    // Online Songs
-    const mediaInfo = getItem(index);
+    let mediaInfo = getItem(index);
     if (!mediaInfo) {
         return;
     }
     boxMediaListEvent.emit('re-render');
     boxMediaListEvent.emit('set-by-index', item, `${index + 1}. (${green(icon('play'))}) ${mediaInfo.title}`);
-    const { filename, duration } = await downloadMedia(mediaInfo);
-    player(mediaInfo.title, filename, duration);
+    mediaInfo = await downloadMedia(mediaInfo);
+    // display detil
+    boxMediaDetailEvent.emit('set', mediaInfo);
+    player(mediaInfo.title, mediaInfo.filename ?? '', mediaInfo.duration);
     return;
 }
 function player(title, filename, duration) {
@@ -49,6 +37,8 @@ async function playNextSong(filename) {
     const index = downloadedSong.indexOf(currentSong);
     const nextSong = downloadedSong[index + 1];
     if (nextSong) {
+        // display detil
+        boxMediaDetailEvent.emit('set', nextSong);
         return player(nextSong.title, nextSong.filename ?? 'none', nextSong.duration);
     }
     const firstSong = downloadedSong[0];

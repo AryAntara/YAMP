@@ -1,7 +1,6 @@
 import blessed from 'blessed';
 import { notification } from '../events.js';
 import { screen } from './index.js';
-import { icon } from '../lib/icons.js';
 
 export default function createNotificationBox(){
     const notificationBox = blessed.textbox({

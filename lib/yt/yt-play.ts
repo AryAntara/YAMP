@@ -1,34 +1,17 @@
 import { ChildProcess, exec } from "child_process";
 import { getAll, getItem } from "../contents.js";
 import { MediaInfo, db, downloadMedia } from "./yt-download.js";
-import { boxMediaListEvent, notification } from "../../events.js";
+import { boxMediaDetailEvent, boxMediaListEvent, notification } from "../../events.js";
 import { icon } from "../icons.js";
 import { green } from "kolorist";
-import { isOffline } from "../system.js";
 
 let play: ChildProcess | null;
 
 export async function playMedia(item: any) {
-    const offlineMode = isOffline();
     const title = item.content;
     const index = Number(title.split('.')[0]) - 1;
 
-    // if you are in offline mode
-    if(offlineMode){
-       // try using downloaded song 
-       const downloadedSongs = db.read() as MediaInfo[];
-       const song = downloadedSongs[index];
-
-       if (!song) {
-           return
-       }
-
-       player(song.title, song.filename ?? '', song.duration);
-       return
-    }
-
-    // Online Songs
-    const mediaInfo = getItem(index);
+    let mediaInfo = getItem(index);
     if (!mediaInfo) {
         return
     }
@@ -36,8 +19,12 @@ export async function playMedia(item: any) {
     boxMediaListEvent.emit('re-render');
     boxMediaListEvent.emit('set-by-index', item, `${index + 1}. (${green(icon('play'))}) ${mediaInfo.title}`);
 
-    const { filename, duration } = await downloadMedia(mediaInfo);
-    player(mediaInfo.title, filename, duration)
+    mediaInfo = await downloadMedia(mediaInfo);
+
+    // display detil
+    boxMediaDetailEvent.emit('set', mediaInfo);
+
+    player(mediaInfo.title, mediaInfo.filename ?? '', mediaInfo.duration);
     return;
 }
 
@@ -64,6 +51,8 @@ async function playNextSong(filename: string) {
     const nextSong = downloadedSong[index + 1];
 
     if (nextSong) {
+        // display detil
+        boxMediaDetailEvent.emit('set', nextSong);
         return player(nextSong.title, nextSong.filename ?? 'none', nextSong.duration);
     }
 
@@ -71,12 +60,12 @@ async function playNextSong(filename: string) {
     return player(firstSong.title, firstSong.filename ?? 'none', firstSong.duration);
 }
 
-export function killPlayer(){
-    if(play){
+export function killPlayer() {
+    if (play) {
         play.kill()
     }
 }
 
-export function isPlaying(){
+export function isPlaying() {
     return !!play;
 }

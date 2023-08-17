@@ -1,7 +1,5 @@
-import { YouTubeSearchResults } from "youtube-search";
 import { setItems } from '../contents.js';
-import { MediaInfo, db } from './yt-download.js';
-import { goOffline } from '../system.js';
+import { MediaInfo } from './yt-download.js';
 import { search } from "../youtube.js";
 
 /**
@@ -12,17 +10,12 @@ import { search } from "../youtube.js";
  */
 export async function getYtMediaByName(query: string): Promise<MediaInfo[]> {
     try {
-        const searching = await search(query);
-        const results = searching || [];
-
+        const searching = await search(query);                
         // set content into global
         setItems(searching);
 
-        return results;
-    } catch (error) {
-        console.log('Error when fetching data', error)
-        goOffline()
-        const offlineMedia = db.read();
-        return offlineMedia as MediaInfo[];
+        return searching;
+    } catch (error) {        
+        return [];
     }
 }

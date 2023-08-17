@@ -5,8 +5,7 @@ import { screen } from "./index.js";
 import { icon } from "../lib/icons.js";
 import { MediaInfo, db } from "../lib/yt/yt-download.js";
 import { green } from "kolorist";
-import { isOffline } from "../lib/system.js";
-import { YouTubeSearchResults } from "youtube-search";
+
 function createSearchInput() {
     const searchInput = blessed.textbox({
         bottom: '0',

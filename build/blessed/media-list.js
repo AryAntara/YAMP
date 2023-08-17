@@ -12,6 +12,7 @@ async function createMediaList() {
             type: 'line'
         },
         height: "95%",
+        width: '50%',
         mouse: true,
         keys: true,
         style: {
@@ -22,7 +23,7 @@ async function createMediaList() {
         },
     });
     // get 10 media 
-    const query = 'nadin amizah'; // search query
+    const query = 'serana'; // search query
     let media = await getYtMediaByName(query);
     let mediaListMap = [];
     // mapping media results 
@@ -32,7 +33,6 @@ async function createMediaList() {
         }
         return `${i + 1}. ${e.title} - ${e.publish_at}`;
     });
-    console.log(mediaListMap);
     boxMediaList.setItems(mediaListMap);
     // EVENTS
     // change item list in box media
