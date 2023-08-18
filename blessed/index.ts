@@ -28,11 +28,5 @@ screen.append(boxMediaDetail);
 // focus on media list
 boxMediaList.focus();
 
-// Capture keyboard input
-screen.key(['escape', 'q', 'C-c'], () => { 
-    killPlayer();
-    process.exit(0); 
-});
-
 // Render the screen.
 screen.render();

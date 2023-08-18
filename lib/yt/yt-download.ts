@@ -109,5 +109,5 @@ async function downloadThumb(link: string, title: string) {
             // deleting the broken png file
             unlinkSync(`${DOWNLOAD_PATH}.thumbs/${filename}-raw.png`)
         })
-    return `${filename}-conv.png`;
+    return `${filename}.png`;
 }

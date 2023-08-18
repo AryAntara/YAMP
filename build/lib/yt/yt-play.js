@@ -5,6 +5,7 @@ import { boxMediaDetailEvent, boxMediaListEvent, notification } from "../../even
 import { icon } from "../icons.js";
 import { green } from "kolorist";
 let play;
+let stopped = false;
 export async function playMedia(item) {
     const title = item.content;
     const index = Number(title.split('.')[0]) - 1;
@@ -50,5 +51,17 @@ export function killPlayer() {
     }
 }
 export function isPlaying() {
-    return !!play;
+    return play && !stopped;
+}
+export function stopPlaying() {
+    if (play && !stopped) {
+        stopped = true;
+        play.kill('SIGSTOP');
+    }
+}
+export function startPlaying() {
+    if (play && stopped) {
+        stopped = false;
+        play.kill('SIGCONT');
+    }
 }

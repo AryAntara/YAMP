@@ -6,6 +6,7 @@ import { icon } from "../icons.js";
 import { green } from "kolorist";
 
 let play: ChildProcess | null;
+let stopped = false;
 
 export async function playMedia(item: any) {
     const title = item.content;
@@ -67,5 +68,19 @@ export function killPlayer() {
 }
 
 export function isPlaying() {
-    return !!play;
+    return play && !stopped;
+}
+
+export function stopPlaying(){
+    if(play && !stopped){
+        stopped = true;
+        play.kill('SIGSTOP');
+    }
+}
+
+export function startPlaying(){
+    if(play && stopped){
+        stopped = false;
+        play.kill('SIGCONT')
+    }
 }

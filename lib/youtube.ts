@@ -2,7 +2,7 @@ import axios from 'axios'
 import { MediaInfo, db } from "./yt/yt-download.js";
 import { goOffline } from "./system.js";
 
-const TIMEOUT = 5; // second
+const TIMEOUT = 5000; // milisecond
 const API_KEY = '77b7b1b0b9e57f8e3e1465c8'; // 10 search count
 
 type LolHumanYoutubeSearch = {
@@ -37,7 +37,6 @@ async function youtubeSearch(query: string) {
     try {
         const url = `https://api.lolhuman.xyz/api/ytsearch?apikey=${API_KEY}&query=${query}`
         const res = await axios(url, { timeout: TIMEOUT });
-        console.log(res.data);
         return res.data;
     } catch (e) {               
         goOffline()

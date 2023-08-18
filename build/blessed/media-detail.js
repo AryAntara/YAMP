@@ -8,11 +8,12 @@ const MS_IN_MINUTE = 1000 * 60;
 function createAnsiiImageOfThumb(media) {
     const ansiiBox = contrib.picture({
         file: media ? imageResolver(media.thumbnail ?? '') : '',
-        top: 6,
-        left: '22%',
-        height: 12,
-        width: 56,
+        top: 3,
+        left: '24%',
+        height: 17,
+        width: 53,
         border: 'line',
+        col: 10,
         onReady: function () {
             screen.render();
         },
@@ -25,7 +26,7 @@ function createAnsiiImageOfThumb(media) {
 function createMediaDetail(media) {
     const ansiiBox = blessed.list({
         width: "80%",
-        left: 9,
+        left: 12,
         height: 15,
         top: 22,
         items: [
